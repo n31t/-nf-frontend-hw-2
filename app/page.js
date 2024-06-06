@@ -8,16 +8,16 @@ const taskList = [{id: 1, text: "Todo Test", completed: false}]
 
 export default function Home() {
   const [task, setTask] = useState('');
-  // const [tasks, setTasks] = useState(taskList);
-  const [tasks, setTasks] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedTasks = window.localStorage.getItem('tasks');
-      if (savedTasks) {
-        return JSON.parse(savedTasks);
-      }
-    }
-    return taskList;
-  });
+  const [tasks, setTasks] = useState(taskList);
+  // const [tasks, setTasks] = useState(() => {
+  //   if (typeof window !== 'undefined') {
+  //     const savedTasks = window.localStorage.getItem('tasks');
+  //     if (savedTasks) {
+  //       return JSON.parse(savedTasks);
+  //     }
+  //   }
+  //   return taskList;
+  // });
   const [filter, setFilter] = useState('all')
   const [itemsLeft, setItemsLeft] = useState(0)
   
@@ -36,14 +36,7 @@ export default function Home() {
   // useEffect(() => {
   //   localStorage.setItem('tasks', JSON.stringify(tasks));
   // }, [tasks]);
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedTasks = window.localStorage.getItem('tasks');
-      if (savedTasks) {
-        setTasks(JSON.parse(savedTasks));
-      }
-    }
-  }, []);
+
 
   const handleAddTask = () => {
     if( task === '') return;
