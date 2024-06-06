@@ -4,23 +4,34 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import TaskList from './components/TaskList';
 
-const taskList = [{id: 1, text: "Todo Test", completed: false}]
+// const taskList = [{id: 1, text: "Todo Test", completed: false}]
 
 export default function Home() {
   const [task, setTask] = useState('');
-  // const [tasks, setTasks] = useState(taskList);
-
-  const [tasks, setTasks] = useState(() => { 
-    const savedTasks = localStorage.getItem("tasks"); 
-    return savedTasks ? JSON.parse(savedTasks) : []; 
-  });
-  
+  const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState('all')
   const [itemsLeft, setItemsLeft] = useState(0)
+  const [tasksLoaded, setTasksLoaded] = useState(false);
   
-  useEffect(() => { 
-    localStorage.setItem("tasks", JSON.stringify(tasks)); 
-  }, [tasks]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedTasks = window.localStorage.getItem('tasks');
+      if (savedTasks) {
+        console.log('Retrieved tasks from localStorage:', savedTasks);
+        setTasks(JSON.parse(savedTasks)); 
+      }
+    }
+    setTasksLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (tasksLoaded) {
+    if (typeof window !== 'undefined') {
+      console.log('Saving tasks to localStorage:', tasks);
+      window.localStorage.setItem('tasks', JSON.stringify(tasks));
+    }}
+  }, [tasks, tasksLoaded]);
 
   useEffect(() => {
     calculateItemsLeft()
