@@ -8,13 +8,42 @@ const taskList = [{id: 1, text: "Todo Test", completed: false}]
 
 export default function Home() {
   const [task, setTask] = useState('');
-  const [tasks, setTasks] = useState(taskList);
+  // const [tasks, setTasks] = useState(taskList);
+  const [tasks, setTasks] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedTasks = window.localStorage.getItem('tasks');
+      if (savedTasks) {
+        return JSON.parse(savedTasks);
+      }
+    }
+    return taskList;
+  });
   const [filter, setFilter] = useState('all')
   const [itemsLeft, setItemsLeft] = useState(0)
+  
+
+  // useEffect(() => {
+  //   const savedTasks = localStorage.getItem('tasks');
+  //   if (savedTasks) {
+  //     setTasks(JSON.parse(savedTasks));
+  //   }
+  // }, []);
 
   useEffect(() => {
     calculateItemsLeft()
   }, [tasks])
+
+  // useEffect(() => {
+  //   localStorage.setItem('tasks', JSON.stringify(tasks));
+  // }, [tasks]);
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedTasks = window.localStorage.getItem('tasks');
+      if (savedTasks) {
+        setTasks(JSON.parse(savedTasks));
+      }
+    }
+  }, []);
 
   const handleAddTask = () => {
     if( task === '') return;
@@ -81,11 +110,11 @@ export default function Home() {
       <div className="bg-gray-800 rounded p-4">
         {/* Medium level: extract todo's listing to TaskList component */}
         <TaskList 
-    tasks={tasks} 
-    handleToggleTask={handleToggleTask} 
-    handleDeleteTask={handleDeleteTask} 
-    filter={filter}
-  />
+          tasks={tasks} 
+          handleToggleTask={handleToggleTask} 
+          handleDeleteTask={handleDeleteTask} 
+          filter={filter}
+        />
         <div className="mt-4 flex justify-between items-center text-sm text-gray-400">
           <span> {itemsLeft} items left</span> 
           <div>
@@ -102,5 +131,7 @@ export default function Home() {
         </div>
       </div>
     </div>
+
+
   );
 }
