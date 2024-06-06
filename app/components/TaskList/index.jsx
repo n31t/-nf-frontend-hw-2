@@ -1,12 +1,31 @@
 import React from 'react';
 import TaskItem from '../TaskItem';
 
-const TaskList = () => {
-  // Render TaskItems using TaskItem component
-  // Filter tasks by status here
-  return (
-    <></>
-  );
-};
+export default function TaskList({ tasks, handleToggleTask, handleDeleteTask, filter }) {
+  var filteredTasks = tasks;
+  switch(filter) {
+    case 'all':
+      break;
+    case 'active':
+      filteredTasks = tasks.filter((task) => !task.completed);
+      break;
+    case 'completed':
+      filteredTasks = tasks.filter((task) => task.completed);
+      break;
+    default:
+      break;
+  }
 
-export default TaskList;
+  return (
+    <ul>
+      {filteredTasks.map((task) => (
+        <TaskItem 
+          key={task.id} 
+          task={task} 
+          handleToggleTask={handleToggleTask} 
+          handleDeleteTask={handleDeleteTask} 
+        />
+      ))}
+    </ul>
+  );
+}
